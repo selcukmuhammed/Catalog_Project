@@ -1,0 +1,52 @@
+﻿@model (MVCatalog.Models.ProductViewModel Product, List<CategoryViewModel> CategoryList)
+
+@{
+	ViewData["Title"] = "Add";
+}
+
+<form class="form-group" method="post">
+	<div>
+		<label>ÜRÜN ADI</label>
+		<input name="Product.Name" class="form-control" type="text" placeholder="Ürün adını giriniz..." />
+	</div>
+    <br />
+	<div>
+		<label>ÜRÜN FİYATI</label>
+		<input type="text" name="Product.Price" class="form-control" placeholder="Fiyatı giriniz..." />
+	</div>
+    <br />
+	<div>
+        <label>ÜRÜN DURUMU</label>
+        <br />
+        <br />
+		<input class="form-check-input" asp-for="Product.IsDeleted" /> @Html.DisplayNameFor(model => model.Product.IsDeleted)
+	</div>
+    <br />
+	<div>
+		<label>ÜRÜN TARİHİ</label>
+		<input type="date" name="Product.RecordTime" class="form-control" />
+	</div>
+    <br />
+	<select name="Product.CategoryId" id="Categories">
+		<option value="">Seç</option>
+		@foreach (var item in Model.CategoryList)
+		{
+
+			<option value="@item.CategoryId">@item.Name</option>
+		}
+	</select>
+    <br />
+	<div>
+		<input type="submit" value="YENİ ÜRÜN EKLE" class="btn btn-primary" />
+	</div>
+</form>
+<br />
+<div>
+	<a asp-action="Index">LİSTEYE GERİ DÖN</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

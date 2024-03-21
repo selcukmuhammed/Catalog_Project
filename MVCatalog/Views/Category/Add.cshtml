@@ -1,0 +1,37 @@
+﻿@model MVCatalog.Models.CategoryViewModel
+@{
+	ViewData["Title"] = "Add";
+}
+
+<form class="form-group" method="post">
+	<div>
+		<label>KATEGORİ ADI</label>
+		<input asp-for="Name" class="form-control" type="text" placeholder="Kategori adını giriniz..." />
+	</div>
+	<br />
+	<div>
+		<label>KATEGORİ DURUMU</label>
+		<br />
+		<br />
+		<input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+	</div>
+	<br />
+	<div>
+		<label>KATEGORİ TARİHİ</label>
+		<input asp-for="RecordTime" class="form-control" />
+	</div>
+	<br />
+	<div>
+		<input type="submit" value="YENİ KATEGORİ EKLE" class="btn btn-primary" />
+	</div>
+</form>
+<br />
+<div>
+	<a asp-action="Index">LİSTEYE GERİ DÖN</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

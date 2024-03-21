@@ -1,0 +1,41 @@
+﻿@model List<MVCatalog.Models.CategoryViewModel>
+
+@{
+	ViewData["Title"] = "Index";
+}
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>KATEGORİ ID</th>
+			<th>KATEGORİ ADI</th>
+			<th>KATEGORİ DURUMU</th>
+			<th>KATEGORİ TARİHİ</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.CategoryId)
+				</td>
+				<td>
+					@Html.DisplayFor(modeItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.IsDeleted)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.RecordTime)
+				</td>
+				<td>
+					<a href="@Url.Action("Update","Category",new { id=item.CategoryId})" class="btn btn-success">Güncelle</a>
+					<a href="@Url.Action("Delete","Category",new {id=item.CategoryId})" class="btn btn-danger">Sil</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+<a href="/Category/Add/" class="btn btn-primary">Yeni Kategori Ekle</a>
+
+<script src="~/js/Message.js"></script>

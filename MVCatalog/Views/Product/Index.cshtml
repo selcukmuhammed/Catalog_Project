@@ -1,0 +1,49 @@
+﻿@model List<MVCatalog.Models.ProductViewModel>
+
+@{
+	ViewData["Title"] = "Index";
+}
+
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>ÜRÜN ID</th>
+			<th>ÜRÜN ADI</th>
+			<th>ÜRÜN FİYATI</th>
+			<th>ÜRÜN TARİHİ</th>
+			<th>ÜRÜN DURUMU</th>
+			<th>ÜRÜN KATEGORİSİ</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<th>
+					@Html.DisplayFor(modelItem => item.ProductId)
+				</th>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Price)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.RecordTime)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.IsDeleted)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Categories.Name)
+				</td>
+				<td>
+					<a href="@Url.Action("Update","Product",new { id=item.ProductId})" class="btn btn-success">Güncelle</a>
+					<a href="@Url.Action("Delete","Product",new {id=item.ProductId})" class="btn btn-danger">Sil</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<a href="/Product/Add/" class="btn btn-primary">Yeni Ürün Ekle</a>
