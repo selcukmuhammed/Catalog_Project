@@ -1,4 +1,4 @@
-﻿namespace TestDemo.Services
+﻿namespace TestDemo.Interfaces
 {
     public interface ICategoryService
     {

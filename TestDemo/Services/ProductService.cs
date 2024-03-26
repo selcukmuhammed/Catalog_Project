@@ -1,5 +1,6 @@
 ﻿
 using MVCatalog.Models;
+using TestDemo.Interfaces;
 using TestDemo.Models;
 
 namespace TestDemo.Services

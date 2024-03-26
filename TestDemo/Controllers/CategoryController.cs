@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using TestDemo.Interfaces;
 using TestDemo.Models;
-using TestDemo.Services;
 
 namespace TestDemo.Controllers
 {

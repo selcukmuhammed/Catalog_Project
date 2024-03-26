@@ -1,6 +1,6 @@
 ﻿using MVCatalog.Models;
 
-namespace TestDemo.Services
+namespace TestDemo.Interfaces
 {
     public interface IProductService
     {

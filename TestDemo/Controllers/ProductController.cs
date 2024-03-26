@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MVCatalog.Models;
-using TestDemo.Services;
+using TestDemo.Interfaces;
 
 namespace TestDemo.Controllers
 {
