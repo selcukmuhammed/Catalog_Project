@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -43,13 +44,12 @@ namespace TestDemo.Controllers
 
 		[HttpPost("login")]
 		public async Task<IActionResult> Login([FromBody] LoginDto loginDto)
-		{
+		{ 
 			var loginResult = await _authService.LoginAsync(loginDto);
-
-			if (loginResult.IsSucceed)
+			if(loginResult!=null)
 				return Ok(loginResult);
-
-			return Unauthorized(loginResult);
+			else
+				return Unauthorized(loginResult);
 		}
 
 		[HttpPost("make-admin")]

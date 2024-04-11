@@ -8,14 +8,48 @@ namespace MVCatalog.Controllers
 	public class CategoryController : Controller
 	{
 		private readonly CategoryService _category;
-		public CategoryController(IConfiguration config)
+		private readonly IHttpContextAccessor _httpContext;
+		public CategoryController(IConfiguration config, IHttpContextAccessor httpContext)
 		{
-			_category = new CategoryService(config);
+			_category = new CategoryService(config, httpContext);
+			_httpContext = httpContext;
 		}
+		[HttpGet]
 		public async Task<IActionResult> Index()
 		{
+			var token = _httpContext.HttpContext.Session.GetString("token");
 			var response = await _category.GetAllCategoryAsync();
-			return View(response);
+
+			if (response == null)
+			{
+				TempData["ErrorMessage"] = "Ürünler alınırken bir hata oluştu.";
+				return RedirectToAction("Index", "Login");
+			}
+
+			if (response.StatusCode == "401")
+			{
+				TempData["ErrorMessage"] = "Oturumunuzun süresi dolmuş veya oturumunuz yok. Lütfen tekrar giriş yapın.";
+				return RedirectToAction("Index", "Login");
+			}
+
+			if (response.StatusCode == "200")
+			{
+				TempData["ErrorMessage"] = "Token doğrulama hatası. Lütfen tekrar giriş yapın.";
+				return RedirectToAction("Index", "Category");
+			}
+			if (response.StatusCode == "403")
+			{
+				TempData["ErrorMessage"] = "Hata kodu:403. Bu alana giriş yetkiniz yoktur.";
+				return RedirectToAction("Index", "Login");
+			}
+
+			if (response.Result == null)
+			{
+				TempData["ErrorMessage"] = "Ürünler alınırken bir hata oluştu.";
+				return RedirectToAction("Index", "Category");
+			}
+
+			return View(response.Result);
 		}
 
 		[HttpGet]
@@ -27,8 +61,39 @@ namespace MVCatalog.Controllers
 		[HttpPost]
 		public async Task<IActionResult> Add(CategoryViewModel category)
 		{
+			var token = _httpContext.HttpContext.Session.GetString("token");
 			var response = await _category.AddCategoryAsync(category);
-			if (response)
+
+			if (response == null)
+			{
+				TempData["ErrorMessage"] = "Kategoriler alınırken bir hata oluştu.";
+				return RedirectToAction("Index", "Login");
+			}
+
+			if (response.StatusCode == "401")
+			{
+				TempData["ErrorMessage"] = "Oturumunuzun süresi dolmuş veya oturumunuz yok. Lütfen tekrar giriş yapın.";
+				return RedirectToAction("Index", "Login");
+			}
+
+			if (response.StatusCode == "200")
+			{
+				TempData["ErrorMessage"] = "Token doğrulama hatası. Lütfen tekrar giriş yapın.";
+				return RedirectToAction("Index", "Category");
+			}
+			if (response.StatusCode == "403")
+			{
+				TempData["ErrorMessage"] = "Hata kodu:403. Bu alana giriş yetkiniz yoktur.";
+				return RedirectToAction("Index", "Login");
+			}
+
+			if (response.Result == null)
+			{
+				TempData["ErrorMessage"] = "Kategoriler alınırken bir hata oluştu.";
+				return RedirectToAction("Index", "Category");
+			}
+
+			if (response.Result)
 			{
 				TempData["SuccessMessage"] = "Kategori başarıyla eklendi!";
 				return RedirectToAction("Index");
@@ -47,18 +112,35 @@ namespace MVCatalog.Controllers
 		{
 			try
 			{
+				var token = _httpContext.HttpContext.Session.GetString("token");
 				var response = await _category.UpdateCategoryAsync(category);
-				if (response != null)
+
+				if (response.StatusCode == "401")
 				{
-					TempData["SuccessMessage"] = "Kategori başarıyla güncellendi!";
-					return RedirectToAction("Index");
+					TempData["ErrorMessage"] = "Oturumunuzun süresi dolmuş veya oturumunuz yok. Lütfen tekrar giriş yapın.";
+					return RedirectToAction("Index", "Login");
 				}
-				if (!response)
+
+				if (response.StatusCode == "200")
 				{
-					TempData["ErrorMessage"] = "Kategori güncellenirken bir hata oluştu.";
-					return RedirectToAction();
+					TempData["ErrorMessage"] = "Token doğrulama hatası. Lütfen tekrar giriş yapın.";
+					return RedirectToAction("Index", "Login");
 				}
-				return RedirectToAction("Index");
+
+				if (response.StatusCode == "403")
+				{
+					TempData["ErrorMessage"] = "Hata kodu: 403. Bu alana giriş yetkiniz yoktur.";
+					return RedirectToAction("Index", "Login");
+				}
+
+				if (!response.Result)
+				{
+					TempData["ErrorMessage"] = "Ürün güncellenirken bir hata oluştu.";
+					return RedirectToAction("Index", "Category");
+				}
+
+				TempData["SuccessMessage"] = "Ürün başarıyla güncellendi!";
+				return RedirectToAction("Index", "Category");
 			}
 			catch (Exception e)
 			{
@@ -70,18 +152,35 @@ namespace MVCatalog.Controllers
 		{
 			try
 			{
+				var token = _httpContext.HttpContext.Session.GetString("token");
 				var response = await _category.DeleteCategoryAsync(id);
-				if (response != null)
+
+				if (response.StatusCode == "401")
 				{
-					TempData["SuccessMessage"] = "Kategori başarıyla silindi!";
-					return RedirectToAction("Index");
+					TempData["ErrorMessage"] = "Oturumunuzun süresi dolmuş veya oturumunuz yok. Lütfen tekrar giriş yapın.";
+					return RedirectToAction("Index", "Login");
 				}
-				if (!response)
+
+				if (response.StatusCode == "200")
 				{
-					TempData["ErrorMessage"] = "Kategori silinirken bir hata oluştu.";
-					return RedirectToAction();
+					TempData["ErrorMessage"] = "Token doğrulama hatası. Lütfen tekrar giriş yapın.";
+					return RedirectToAction("Index", "Login");
 				}
-				return RedirectToAction("Index");
+
+				if (response.StatusCode == "403")
+				{
+					TempData["ErrorMessage"] = "Hata kodu: 403. Bu alana giriş yetkiniz yoktur.";
+					return RedirectToAction("Index", "Login");
+				}
+
+				if (!response.Result)
+				{
+					TempData["ErrorMessage"] = "Ürün silinirken bir hata oluştu.";
+					return RedirectToAction("Index", "Category");
+				}
+
+				TempData["SuccessMessage"] = "Ürün başarıyla silindi!";
+				return RedirectToAction("Index", "Category");
 			}
 			catch (Exception e)
 			{

@@ -24,11 +24,12 @@ namespace MVCatalog.Controllers
 		public async Task<IActionResult> Index(LoginModel loginModel)
 		{
 			var token = await _authService.LoginAsync(loginModel);
-			_httpContext.HttpContext.Session.SetString("token", token);
+			
 
 			if (token != null)
 			{
-				HttpContext.Response.Cookies.Append("AuthToken", token);
+				_httpContext.HttpContext.Session.SetString("token", token);
+				//HttpContext.Response.Cookies.Append("AuthToken", token);
 				return RedirectToAction("Index", "Product");
 			}
 			else

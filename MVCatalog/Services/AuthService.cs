@@ -39,7 +39,7 @@ namespace MVCatalog.Services
         public async Task LogoutAsync()
         {
             await _httpContextAccessor.HttpContext.SignOutAsync();
-            _httpContextAccessor.HttpContext.Response.Cookies.Delete("token");
+            _httpContextAccessor.HttpContext.Session.Clear();
         }
     }
 }

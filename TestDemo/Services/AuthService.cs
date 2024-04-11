@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -14,33 +15,46 @@ namespace TestDemo.Services
 		private readonly UserManager<AppUser> _userManager;
 		private readonly RoleManager<IdentityRole> _roleManager;
 		private readonly IConfiguration _configuration;
+		private readonly SignInManager<AppUser> _signInManager;
 
-		public AuthService(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+		public AuthService(UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, SignInManager<AppUser> signInManager)
 		{
 			_userManager = userManager;
 			_roleManager = roleManager;
 			_configuration = configuration;
+			_signInManager = signInManager;
 		}
 
-		public async Task<AuthServiceResponseDto> LoginAsync(LoginDto loginDto)
+		public async Task<string> LoginAsync(LoginDto loginDto)
 		{
+		
 			var user = await _userManager.FindByNameAsync(loginDto.UserName);
 
 			if (user is null)
-				return new AuthServiceResponseDto()
+			{
+				AuthServiceResponseDto authServiceResponseDto = new AuthServiceResponseDto()
 				{
 					IsSucceed = false,
 					Message = "Geçersiz Kullanıcı adı!"
 				};
+				var result= JsonConvert.SerializeObject(authServiceResponseDto);
+				return result;
+			}
+				
 
 			var isPasswordCorrect = await _userManager.CheckPasswordAsync(user, loginDto.Password);
 
 			if (!isPasswordCorrect)
-				return new AuthServiceResponseDto()
+			{
+				AuthServiceResponseDto authServiceResponseDto = new AuthServiceResponseDto()
 				{
 					IsSucceed = false,
 					Message = "Geçersiz Şifre!"
 				};
+				var result = JsonConvert.SerializeObject(authServiceResponseDto);
+				return result;
+			}
+				
 
 			var userRoles = await _userManager.GetRolesAsync(user);
 
@@ -60,11 +74,7 @@ namespace TestDemo.Services
 
 			var token = GenerateNewJsonWebToken(authClaims);
 
-			return new AuthServiceResponseDto()
-			{
-				IsSucceed = true,
-				Message = token
-			};
+			return token;
 		}
 
 		public async Task<AuthServiceResponseDto> MakeAdminAsync(UpdatePermissionDto updatePermissionDto)

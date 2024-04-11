@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MVCatalog.Models;
 using Newtonsoft.Json;
@@ -13,36 +14,67 @@ namespace MVCatalog.Services
 		private readonly IConfiguration _config;
 		private readonly string _url;
 		private readonly HttpClient _client;
+		private readonly IHttpContextAccessor _httpContextAccessor;
 
-		public CategoryService(IConfiguration config)
+		public CategoryService(IConfiguration config, IHttpContextAccessor httpContextAccessor)
 		{
 			_config = config;
 			_client = new HttpClient();
 			_url = _config.GetValue<string>("URL:Api");
 			_client.BaseAddress = new Uri(_url);
+			_httpContextAccessor = httpContextAccessor;
 		}
-		public async Task<List<CategoryViewModel>> GetAllCategoryAsync()
+
+		public async Task<ResponseModel<List<CategoryViewModel>>> GetAllCategoryAsync()
 		{
+			ResponseModel<List<CategoryViewModel>> responseModel = new ResponseModel<List<CategoryViewModel>>();
+			var token = _httpContextAccessor.HttpContext.Session.GetString("token");
+
+			if (token == null)
+			{
+				responseModel.StatusCode = "401";
+				return responseModel;
+			}
+
 			using var request = new HttpRequestMessage(new HttpMethod("GET"), _url + "/category/GetAllCategory/");
+			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 			//request.Content = new StringContent(JsonConvert.SerializeObject(data));
 			//request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
 			var response = _client.Send(request);
 
 			if (response == null)
-				return null;
+				return responseModel;
 
+			if (response.StatusCode.ToString() == "401")
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+			}
 
 			if (!response.IsSuccessStatusCode)
-				return null;
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+			}
+			if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+			{
+				responseModel.StatusCode = "403";
+				responseModel.Description = "Hata kodu : 403.Bu alana giriş yetkiniz yoktur.";
+				return responseModel;
+			}
 
 			if (response.Content == null)
-				return null;
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+				return responseModel;
+			}
 
 			var responseJson = response.Content.ReadAsStringAsync().Result;
-			List<CategoryViewModel> categoryList = JsonConvert.DeserializeObject<List<CategoryViewModel>>(responseJson);
 
-			return categoryList;
+			List<CategoryViewModel> categoryList = JsonConvert.DeserializeObject<List<CategoryViewModel>>(responseJson);
+			responseModel.Result = new List<CategoryViewModel>();
+			responseModel.Result = categoryList;
+
+			return responseModel;
 
 		}
 
@@ -69,54 +101,121 @@ namespace MVCatalog.Services
 			return categoryList;
 		}
 
-		public async Task<bool> AddCategoryAsync(CategoryViewModel category)
+		public async Task<ResponseModel<bool>> AddCategoryAsync(CategoryViewModel category)
 		{
+			ResponseModel<bool> responseModel = new ResponseModel<bool>();
+			var token = _httpContextAccessor.HttpContext.Session.GetString("token");
+
+			if (token == null)
+			{
+				responseModel.StatusCode = "401";
+				return responseModel;
+			}
+
 			using var request = new HttpRequestMessage(new HttpMethod("POST"), _url + "/category/AddCategory");
+			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 			request.Content = new StringContent(JsonConvert.SerializeObject(category));
 			request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
 			var response = _client.Send(request);
 
 			if (response == null)
-				return false;
+				return responseModel;
+
+			if (response.StatusCode.ToString() == "401")
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+			}
 
 			if (!response.IsSuccessStatusCode)
-				return false;
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+			}
+			if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+			{
+				responseModel.StatusCode = "403";
+				responseModel.Description = "Hata kodu : 403.Bu alana giriş yetkiniz yoktur.";
+				return responseModel;
+			}
 
 			if (response.Content == null)
-				return false;
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+				return responseModel;
+			}
 
 			var responJson = response.Content.ReadAsStringAsync().Result;
 			bool categoryList = JsonConvert.DeserializeObject<bool>(responJson);
 
-			return categoryList;
+			responseModel.Result = new bool();
+			responseModel.Result = categoryList;
+
+			return responseModel;
 		}
 
-		public async Task<bool> UpdateCategoryAsync(CategoryViewModel category)
+		public async Task<ResponseModel<bool>> UpdateCategoryAsync(CategoryViewModel category)
 		{
+			ResponseModel<bool> responseModel = new ResponseModel<bool>();
+			var token = _httpContextAccessor.HttpContext.Session.GetString("token");
+
+			if (token == null)
+			{
+				responseModel.StatusCode = "401";
+				return responseModel;
+			}
+
 			using var request = new HttpRequestMessage(new HttpMethod("POST"), _url + "/category/UpdateCategory");
+			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 			request.Content = new StringContent(JsonConvert.SerializeObject(category));
 			request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
 			var response = _client.Send(request);
 
 			if (response == null)
-				return false;
+				return responseModel;
+
+			if (response.StatusCode.ToString() == "401")
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+			}
 
 			if (!response.IsSuccessStatusCode)
-				return false;
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+			}
+			if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+			{
+				responseModel.StatusCode = "403";
+				responseModel.Description = "Hata kodu : 403.Bu alana giriş yetkiniz yoktur.";
+				return responseModel;
+			}
 
 			if (response.Content == null)
-				return false;
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+				return responseModel;
+			}
 
 			var responJson = response.Content.ReadAsStringAsync().Result;
 			bool categoryList = JsonConvert.DeserializeObject<bool>(responJson);
 
-			return categoryList;
+			responseModel.Result = new bool();
+			responseModel.Result = categoryList;
+
+			return responseModel;
 		}
 
-		public async Task<bool> DeleteCategoryAsync(long id)
+		public async Task<ResponseModel<bool>> DeleteCategoryAsync(long id)
 		{
+			ResponseModel<bool> responseModel = new ResponseModel<bool>();
+			var token = _httpContextAccessor.HttpContext.Session.GetString("token");
+
+			if (token == null)
+			{
+				responseModel.StatusCode = "401";
+				return responseModel;
+			}
+
 			using var request = new HttpRequestMessage(new HttpMethod("POST"), _url + "/category/DeleteCategory/" + id);
 			request.Content = new StringContent(JsonConvert.SerializeObject(id));
 			request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
@@ -124,18 +223,37 @@ namespace MVCatalog.Services
 			var response = _client.Send(request);
 
 			if (response == null)
-				return false;
+				return responseModel;
+
+			if (response.StatusCode.ToString() == "401")
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+			}
 
 			if (!response.IsSuccessStatusCode)
-				return false;
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+			}
+			if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+			{
+				responseModel.StatusCode = "403";
+				responseModel.Description = "Hata kodu : 403.Bu alana giriş yetkiniz yoktur.";
+				return responseModel;
+			}
 
 			if (response.Content == null)
-				return false;
+			{
+				responseModel.StatusCode = response.StatusCode.ToString();
+				return responseModel;
+			}
 
 			var responJson = response.Content.ReadAsStringAsync().Result;
 			bool categoryList = JsonConvert.DeserializeObject<bool>(responJson);
 
-			return categoryList;
+			responseModel.Result = new bool();
+			responseModel.Result = categoryList;
+
+			return responseModel;
 		}
 
 	}
