@@ -38,8 +38,6 @@ namespace MVCatalog.Services
 
 			using var request = new HttpRequestMessage(new HttpMethod("GET"), _url + "/product/GetAllProducts/");
 			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-			//request.Content = new StringContent(JsonConvert.SerializeObject(data));
-			//request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
 			var response = _client.Send(request);
 
@@ -82,8 +80,6 @@ namespace MVCatalog.Services
 		public async Task<ProductViewModel> GetProductByIdAsync(long id)
 		{
 			using var request = new HttpRequestMessage(new HttpMethod("GET"), _url + "/product/GetProductById/" + id);
-			//request.Content = new StringContent(JsonConvert.SerializeObject(id));
-			//request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
 			var response = _client.Send(request);
 

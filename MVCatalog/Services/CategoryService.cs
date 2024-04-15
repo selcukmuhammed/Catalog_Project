@@ -38,8 +38,6 @@ namespace MVCatalog.Services
 
 			using var request = new HttpRequestMessage(new HttpMethod("GET"), _url + "/category/GetAllCategory/");
 			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
-			//request.Content = new StringContent(JsonConvert.SerializeObject(data));
-			//request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
 			var response = _client.Send(request);
 
@@ -81,8 +79,6 @@ namespace MVCatalog.Services
 		public async Task<CategoryViewModel> GetCategoryByIdAsync(long id)
 		{
 			using var request = new HttpRequestMessage(new HttpMethod("GET"), _url + "/category/GetCategoryById/" + id);
-			//request.Content = new StringContent(JsonConvert.SerializeObject(product));
-			//request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
 			var response = _client.Send(request);
 
@@ -217,6 +213,7 @@ namespace MVCatalog.Services
 			}
 
 			using var request = new HttpRequestMessage(new HttpMethod("POST"), _url + "/category/DeleteCategory/" + id);
+			request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 			request.Content = new StringContent(JsonConvert.SerializeObject(id));
 			request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 

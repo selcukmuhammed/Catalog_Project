@@ -29,7 +29,6 @@ namespace MVCatalog.Controllers
 			if (token != null)
 			{
 				_httpContext.HttpContext.Session.SetString("token", token);
-				//HttpContext.Response.Cookies.Append("AuthToken", token);
 				return RedirectToAction("Index", "Product");
 			}
 			else
@@ -37,6 +36,13 @@ namespace MVCatalog.Controllers
 				ViewBag.ErrorMessage = "Geçersiz kullanıcı adı veya şifre.";
 				return View();
 			}
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Logout()
+		{
+			await _authService.LogoutAsync();
+			return RedirectToAction("Index", "Login");
 		}
 	}
 }

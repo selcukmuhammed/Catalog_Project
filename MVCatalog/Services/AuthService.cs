@@ -41,5 +41,7 @@ namespace MVCatalog.Services
             await _httpContextAccessor.HttpContext.SignOutAsync();
             _httpContextAccessor.HttpContext.Session.Clear();
         }
+
+
     }
 }
