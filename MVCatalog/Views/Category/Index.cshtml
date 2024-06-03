@@ -3,39 +3,40 @@
 @{
 	ViewData["Title"] = "Index";
 }
-<table class="table table-bordered">
-	<thead>
-		<tr>
-			<th>KATEGORİ ID</th>
-			<th>KATEGORİ ADI</th>
-			<th>KATEGORİ DURUMU</th>
-			<th>KATEGORİ TARİHİ</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach (var item in Model)
-		{
+
+<div class="container mt-5">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h5>Category List</h5>
+	</div>
+	<table class="table table-hover">
+		<thead class="thead-dark">
 			<tr>
-				<td>
-					@Html.DisplayFor(modelItem => item.CategoryId)
-				</td>
-				<td>
-					@Html.DisplayFor(modeItem => item.Name)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.IsDeleted)
-				</td>
-				<td>
-					@Html.DisplayFor(modelItem => item.RecordTime)
-				</td>
-				<td>
-					<a href="@Url.Action("Update","Category",new { id=item.CategoryId})" class="btn btn-success">Güncelle</a>
-					<a href="@Url.Action("Delete","Category",new {id=item.CategoryId})" class="btn btn-danger">Sil</a>
-				</td>
+				<th>KATEGORİ ID</th>
+				<th>KATEGORİ ADI</th>
+				<th>KATEGORİ TARİHİ</th>
+				<th>KATEGORİ DURUMU</th>
+				<th>İŞLEMLER</th>
 			</tr>
-		}
-	</tbody>
-</table>
-<a href="/Category/Add/" class="btn btn-primary">Yeni Kategori Ekle</a>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<th>@item.CategoryId</th>
+					<td>@item.Name</td>
+					<td>@item.RecordTime.ToString("dd/MM/yyyy")</td>
+					<td>@(item.IsDeleted ? "SİLİNDİ" : "AKTİF")</td>
+					<td>
+						<a href="@Url.Action("Update","Category",new {id=item.CategoryId})" class="btn btn-success btn-sm">Güncelle</a>
+						<a href="@Url.Action("Delete","Category",new {id=item.CategoryId})" class="btn btn-danger btn-sm">Sil</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<a href="/Category/Add/" class="btn btn-primary">Yeni Kategori Ekle</a>
+	</div>
+</div>
 
 <script src="~/js/Message.js"></script>

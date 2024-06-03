@@ -3,28 +3,34 @@
 	ViewData["Title"] = "Update";
 }
 
-@using (Html.BeginForm("Update", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-	<div class="form-group">
-		@Html.LabelFor(Model => Model.CategoryId, "KATEGORİ ID")
-		@Html.TextBoxFor(Model => Model.CategoryId, new { @class = "form-control" })
-		@Html.HiddenFor(Model => Model.CategoryId)
-		<br />
-		@Html.LabelFor(Model => Model.Name, "KATEGORİ ADI")
-		@Html.TextBoxFor(Model => Model.Name, new { @class = "form-control" })
-		<br />
-		@Html.LabelFor(Model => Model.IsDeleted, "KATEGORİ DURUMU")
-		@Html.TextBoxFor(Model => Model.IsDeleted, new { @class = "form-control" })
-		<br />
-		@Html.LabelFor(Model => Model.RecordTime, "KATEGORİ TARİHİ")
-		@Html.TextBoxFor(Model => Model.RecordTime, new { @class = "form-control" })
+<div class="container mt-5">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h5>Update Category</h5>
 	</div>
-	<br />
+	@using (Html.BeginForm("Update", "Category", FormMethod.Post, new { enctype = "multipart/form-data" }))
+	{
+		<div class="mb-3">
+			@Html.LabelFor(Model => Model.CategoryId, "Kategori ID")
+			@Html.TextBoxFor(Model => Model.CategoryId, new { @class = "form-control", @readonly = "readonly" })
+			@Html.HiddenFor(Model => Model.CategoryId)
+		</div>
+		<div class="mb-3">
+			@Html.LabelFor(Model => Model.Name, "Kategori Adı")
+			@Html.TextBoxFor(Model => Model.Name, new { @class = "form-control" })
+		</div>
+		<div class="mb-3">
+			@Html.LabelFor(Model => Model.IsDeleted, "Kategori Durumu")
+			@Html.TextBoxFor(Model => Model.IsDeleted, new { @class = "form-control" })
+		</div>
+		<div class="mb-3">
+			@Html.LabelFor(Model => Model.RecordTime, "Kategori Tarihi")
+			@Html.TextBoxFor(Model => Model.RecordTime, new { @class = "form-control" })
+		</div>
+		<div>
+			<button type="submit" class="btn btn-success">KATEGORİ GÜNCELLE</button>
+		</div>
+	}
 	<div>
-		<button type="submit" class="btn btn-success">KATEGORİ GÜNCELLE</button>
+		<a href="@Url.Action("Index", "Category")" class="btn btn-secondary mt-3">Listeye Geri Dön</a>
 	</div>
-}
-<br />
-<div>
-	<a asp-action="Index">LİSTEYE GERİ DÖN</a>
 </div>

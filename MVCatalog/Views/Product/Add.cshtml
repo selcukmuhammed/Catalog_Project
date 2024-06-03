@@ -4,45 +4,47 @@
 	ViewData["Title"] = "Add";
 }
 
-<form class="form-group" method="post">
-	<div>
-		<label>ÜRÜN ADI</label>
-		<input name="Product.Name" class="form-control" type="text" placeholder="Ürün adını giriniz..." />
+<div class="container mt-5">
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h5>Add Product</h5>
 	</div>
-    <br />
+	<form class="form-group" method="post">
+		<div class="mb-3">
+			<label for="productName" class="form-label">Ürün Adı</label>
+			<input name="product.Name" class="form-control" type="text" placeholder="Ürün adını giriniz..." />
+		</div>
+		<div class="mb-3">
+			<label for="productPrice" class="form-label">Ürün Fiyatı</label>
+			<input name="product.Price" class="form-control" placeholder="Ürün fiyatını giriniz..." />
+		</div>
+		<div class="mb-3">
+			<label for="product.IsDeleted">Ürün Durumu</label>
+			<div class="form-check">
+				<input class="form-check-input" type="checkbox" name="product.IsDeleted" />
+				<label class="form-check-label" for="product.IsDeleted">Etkisiz</label>
+			</div>
+		</div>
+		<div class="mb-3">
+			<label for="product.RecordTime">Ürün Tarihi</label>
+			<input type="date" name="product.RecordTime" class="form-control" />
+		</div>
+		<div class="mb-3">
+			<label for="productCategory" class="form-label">Ürün Kategorisi</label>
+			<select name="product.CategoryId" id="productCategory" class="form-select">
+				<option value="">Seçiniz</option>
+				@foreach (var item in Model.CategoryList)
+				{
+					<option value="@item.CategoryId">@item.Name</option>
+				}
+			</select>
+		</div>
+		<div>
+			<input type="submit" value="YENİ ÜRÜN EKLE" class="btn btn-primary" />
+		</div>
+	</form>
 	<div>
-		<label>ÜRÜN FİYATI</label>
-		<input type="text" name="Product.Price" class="form-control" placeholder="Fiyatı giriniz..." />
+		<a href="@Url.Action("Index", "Product")" class="btn btn-secondary mt-3">Listeye Geri Dön.</a>
 	</div>
-    <br />
-	<div>
-        <label>ÜRÜN DURUMU</label>
-        <br />
-        <br />
-		<input class="form-check-input" asp-for="Product.IsDeleted" /> @Html.DisplayNameFor(model => model.Product.IsDeleted)
-	</div>
-    <br />
-	<div>
-		<label>ÜRÜN TARİHİ</label>
-		<input type="date" name="Product.RecordTime" class="form-control" />
-	</div>
-    <br />
-	<select name="Product.CategoryId" id="Categories">
-		<option value="">Seç</option>
-		@foreach (var item in Model.CategoryList)
-		{
-
-			<option value="@item.CategoryId">@item.Name</option>
-		}
-	</select>
-    <br />
-	<div>
-		<input type="submit" value="YENİ ÜRÜN EKLE" class="btn btn-primary" />
-	</div>
-</form>
-<br />
-<div>
-	<a asp-action="Index">LİSTEYE GERİ DÖN</a>
 </div>
 
 @section Scripts {

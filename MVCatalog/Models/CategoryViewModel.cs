@@ -6,8 +6,12 @@ namespace MVCatalog.Models
     {
         [Key]
         public long CategoryId { get; set; }
-        public string Name { get; set; }
+
+		[Required(ErrorMessage = "Kategori adı zorunludur.")]
+		public string Name { get; set; }
         public bool IsDeleted { get; set; }
-        public DateTime RecordTime { get; set; }
+
+		[Required(ErrorMessage = "Kategori tarihi zorunludur.")]
+		public DateTime RecordTime { get; set; }
     }
 }

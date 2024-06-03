@@ -1,16 +1,36 @@
-﻿@{
-    ViewData["Title"] = "Index";
+﻿@model MVCatalog.Models.LoginModel
+
+@{
+    ViewData["Title"] = "Giriş Yap";
 }
 
-<form method="post">
-    <div class="mb-3">
-        <label for="UserName" class="form-label">Kullanıcı Adı</label>
-        <input type="text" class="form-control" id="username" name="UserName" required>
+<div class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card p-4 shadow-lg">
+        <div class="card-body">
+            <h2 class="text-center mb-4">Giriş Yap</h2>
+            <form method="post">
+                <div class="mb-3">
+                    <label for="username" class="form-label">Kullanıcı Adı</label>
+                    <input type="text" class="form-control" id="username" name="username" asp-for="UserName" placeholder="Kullanıcı adınızı giriniz..." />
+                    <span asp-validation-for="UserName" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Şifre</label>
+                    <input type="password" class="form-control" id="password" name="password" asp-for="Password" placeholder="Şifrenizi giriniz..." />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Giriş Yap</button>
+                    <a href="/Account/Register/" class="btn btn-secondary">Kayıt Ol</a>
+                </div>
+            </form>
+        </div>
     </div>
-    <div class="mb-3">
-        <label for="Password" class="form-label">Şifre</label>
-        <input type="password" class="form-control" id="password" name="Password" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Giriş Yap</button>
-</form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
 
